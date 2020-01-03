@@ -36,7 +36,7 @@ class Api::V1::ItemsController < ApplicationController
   private
 
   def item_params
-    params.require(:item).permit(:name, :loan_date, :return_date, :contact_id)
+    params.require(:item).permit(:name, :loan_date, :return_date, :contact_id, :photo)
   end
 
   def set_item
