@@ -26,8 +26,8 @@ class Api::V1::ItemsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
-    json_response = JSON.parse(response.body)
-    assert_equal @item.name, json_response['name']
+    json_response = JSON.parse(response.body, symbolize_names: true)
+    assert_equal @item.name, json_response.dig(:data, :attributes, :name)
   end
 
   test 'should create item' do
@@ -70,9 +70,9 @@ class Api::V1::ItemsControllerTest < ActionDispatch::IntegrationTest
     }, as: :json
 
     assert_response :success
-    json_response = JSON.parse(response.body)
+    json_response = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal @params[:item][:name], json_response['name']
+    assert_equal @params[:item][:name], json_response.dig(:data, :attributes, :name)
   end
 
   test 'should not update item' do
