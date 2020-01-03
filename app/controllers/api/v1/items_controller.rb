@@ -1,9 +1,13 @@
 class Api::V1::ItemsController < ApplicationController
+  include Paginable
   before_action :authenticate_user!
+  before_action :set_options
   before_action :set_item, only: [:show, :update, :destroy]
 
   def index
-    @items = ItemSerializer.new(current_user.items).serializable_hash
+    @items = current_user.items.page(current_page).per(per_page)
+    @options = get_links_serializer_options(@options, 'api_v1_items_path', @items)
+    @items = ItemSerializer.new(@items, @options).serializable_hash
     render json: @items, status: :ok
   end
 
@@ -35,6 +39,10 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   private
+
+  def set_options
+    @options = { include: [:user, :contact] }
+  end
 
   def item_params
     params.require(:item).permit(:name, :loan_date, :return_date, :contact_id, :photo)
