@@ -20,12 +20,13 @@ gem 'puma', '~> 4.1'
 # gem 'image_processing', '~> 1.2'
 
 gem 'devise'
+gem 'devise-jwt', '~> 0.5.8'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-# gem 'rack-cors'
+gem 'rack-cors'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
