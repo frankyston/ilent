@@ -1,9 +1,13 @@
 class Api::V1::ContactsController < ApplicationController
+  include Paginable
   before_action :authenticate_user!
+  before_action :set_options
   before_action :set_contact, only: [:show, :update, :destroy]
 
   def index
-    @contacts = ContactSerializer.new(current_user.contacts).serializable_hash
+    @contacts = current_user.contacts.page(current_page).per(per_page)
+    @options = get_links_serializer_options(@options, 'api_v1_contacts_path', @contacts)
+    @contacts = ContactSerializer.new(@contacts, @options).serializable_hash
     render json: @contacts, status: :ok
   end
 
@@ -35,6 +39,10 @@ class Api::V1::ContactsController < ApplicationController
   end
 
   private
+
+  def set_options
+    @options = { include: [:user] }
+  end
 
   def contact_params
     params.require(:contact).permit(:name, :phone, :email)
