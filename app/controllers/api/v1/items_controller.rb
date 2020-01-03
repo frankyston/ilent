@@ -3,18 +3,19 @@ class Api::V1::ItemsController < ApplicationController
   before_action :set_item, only: [:show, :update, :destroy]
 
   def index
-    render json: current_user.items, status: :ok
+    @items = ItemSerializer.new(current_user.items).serializable_hash
+    render json: @items, status: :ok
   end
 
   def show
-    render json: @item, status: :ok
+    render json: ItemSerializer.new(@item).serializable_hash, status: :ok
   end
 
   def create
     @item = current_user.items.build(item_params)
 
     if @item.save
-      render json: @item, status: :created
+      render json: ItemSerializer.new(@item).serializable_hash, status: :created
     else
       render json: { errors: @item.errors }, status: :unprocessable_entity
     end
@@ -22,7 +23,7 @@ class Api::V1::ItemsController < ApplicationController
 
   def update
     if @item.update(item_params)
-      render json: @item, status: :ok
+      render json: ItemSerializer.new(@item).serializable_hash, status: :ok
     else
       render json: { errors: @item.errors }, status: :unprocessable_entity
     end
